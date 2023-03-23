@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/categorias")
 public class CategoriaResource {
 
-	@Autowired
+	@Autowired 
 	private CategoriaRepository categoriaRepository;
 	
 	@GetMapping
@@ -41,9 +41,11 @@ public class CategoriaResource {
 	    return ResponseEntity.created(uri).body(categoriaSalva);
 	    
 	}
-	@GetMapping("{codigo}")
-	public Optional<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
-		return categoriaRepository.findById(codigo);
+	
+	@GetMapping("/{codigo}")
+	public ResponseEntity<Optional<Categoria>> buscarPeloCodigo(@PathVariable Long codigo) {
+		Optional<Categoria> categoria = categoriaRepository.findById(codigo);
+		return !categoria.isEmpty() ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
 	}
 	
 }
