@@ -32,7 +32,7 @@ public class ApiFinanceiroException extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		
 		String mensagemUsuario = messageSource.getMessage("messagem.invalida", null, LocaleContextHolder.getLocale());
-		String mensagemDev = ex.getCause().toString();
+		String mensagemDev = ex.getCause() != null ? ex.getCause().toString() : ex.toString();
 		
 		List<Erro>  erros = Arrays.asList(new Erro (mensagemUsuario, mensagemDev));
 		return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);

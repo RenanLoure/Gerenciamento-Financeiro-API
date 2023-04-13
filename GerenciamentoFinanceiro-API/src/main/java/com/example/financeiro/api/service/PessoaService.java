@@ -14,7 +14,7 @@ public class PessoaService {
 	@Autowired
 	 private PessoaRepository pessoaRepository;
 	 
-	 public Pessoa atualizar(Long codigo, Pessoa pessoa) {
+	 public Pessoa atualizar(Long codigo, Pessoa pessoa) { 
 		 Pessoa pessoaSalva = buscarPessoaPeloCodigo(codigo);
 
 		 if(pessoaSalva == null) {
@@ -29,10 +29,17 @@ public class PessoaService {
 				 
 	 }
 	 
-	 private Pessoa buscarPessoaPeloCodigo(Long codigo) {
-			Pessoa pessoaSalva = pessoaRepository.findById(codigo)
-					.orElseThrow(() -> new EmptyResultDataAccessException(1));
-			return pessoaSalva;
-		}
 
+	public void atualizarPropriedadeAtivo(Long codigo, Boolean ativo) {
+		Pessoa pessoaSalva = buscarPessoaPeloCodigo(codigo);
+		pessoaSalva.setAtivo(ativo);
+		pessoaRepository.save(pessoaSalva);
+		
+	}
+
+	private Pessoa buscarPessoaPeloCodigo(Long codigo) {
+		Pessoa pessoaSalva = pessoaRepository.findById(codigo)
+				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		return pessoaSalva;
+	}
 }
