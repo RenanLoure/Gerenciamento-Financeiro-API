@@ -1,12 +1,13 @@
 package com.example.financeiro.api.repository.lancamento;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.example.financeiro.api.model.Lancamento;
 import com.example.financeiro.api.repository.filter.LancamentoFilter;
 
 public interface LancamentoRepositoryQuery {
 
-	public List<Lancamento> filtar(LancamentoFilter lancamentoFilter);
+	public Page<Lancamento> filtar(LancamentoFilter lancamentoFilter, Pageable pageable);
 	
 }
