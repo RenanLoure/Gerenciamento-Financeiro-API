@@ -3,6 +3,9 @@ package com.example.financeiro.api.resource;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -21,9 +24,6 @@ import com.example.financeiro.api.event.RecursoCriadoEvent;
 import com.example.financeiro.api.model.Pessoa;
 import com.example.financeiro.api.repository.PessoaRepository;
 import com.example.financeiro.api.service.PessoaService;
-
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/pessoa")
