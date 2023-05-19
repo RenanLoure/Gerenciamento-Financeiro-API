@@ -15,11 +15,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -51,17 +53,20 @@ public class LancamentoResource {
 	private LancamentoService lancamentoService;
 	
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public Page<Lancamento> pesquisar(LancamentoFilter lancamentofilter, Pageable pageable) {
 		return lancamentoRepository.filtar(lancamentofilter, pageable);
 	}
 	
 	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public ResponseEntity<Optional <Lancamento>> buscarPeloCodigo(@PathVariable Long codigo) {
 		Optional<Lancamento> lancamento = lancamentoRepository.findById(codigo);
 		return !lancamento.isEmpty() ? ResponseEntity.ok(lancamento) : ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
 	public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
 		Lancamento lancamentoSalvo =  lancamentoService.salvar(lancamento);
 		
@@ -71,8 +76,20 @@ public class LancamentoResource {
 	    
 	}
 	
+	@PutMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
+	public ResponseEntity<Lancamento> atualizar(@PathVariable Long codigo, @Valid @RequestBody Lancamento lancamento) {
+		try {
+			Lancamento lancamentoSalvo = lancamentoService.atualizar(codigo, lancamento);
+			return ResponseEntity.ok(lancamentoSalvo);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO')")
 	private void remover(@PathVariable Long codigo) {
 		lancamentoRepository.deleteById(codigo);
 	}
